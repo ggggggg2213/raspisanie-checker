@@ -1,0 +1,28 @@
+
+name: Проверка расписания
+
+on:
+  schedule:
+    - cron: "0 17 * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать файлы
+        uses: actions/checkout@v4
+
+      - name: Установить Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установить библиотеки
+        run: pip install playwright beautifulsoup4 requests
+
+      - name: Запустить проверку
+        run: python check.py
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
